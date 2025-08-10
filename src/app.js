@@ -16,34 +16,34 @@ const app = express();
 //     res.send("HAHAHHAHAHHAHAHAHAH");
 // })
 
-app.get("/user", (req, res) => {
-    res.send({FirstName : "Peehal", BFName : "Rohan BABY"});
-});
+// app.get("/user", (req, res) => {
+//     res.send({FirstName : "Peehal", BFName : "Rohan BABY"});
+// });
 
-app.post("/user", (req, res) => {
-//    Data has been stored to db
-    res.send("data has been successfully stored");
-});
+// app.post("/user", (req, res) => {
+// //    Data has been stored to db
+//     res.send("data has been successfully stored");
+// });
 
-app.delete("/user", (req, res) => {
+// app.delete("/user", (req, res) => {
 
-    res.send("data has been successfully deleted");
-});
+//     res.send("data has been successfully deleted");
+// });
 
 
-app.patch("/user", (req, res) => {
+// app.patch("/user", (req, res) => {
 
-    res.send({FirstName :"Pihu"});
-});
+//     res.send({FirstName :"Pihu"});
+// });
 
-app.put("/user", (req, res) => {
+// app.put("/user", (req, res) => {
 
-    res.send({lastName :"rohan"});
-});
+//     res.send({lastName :"rohan"});
+// });
 
-app.use( "/test", (req, res) => {
-    res.send("namaste from the Pihu - test!!"); 
-});
+// app.use( "/test", (req, res) => {
+//     res.send("namaste from the Pihu - test!!"); 
+// });
 
 
 // app.use("/", (req, res) => {
@@ -51,6 +51,36 @@ app.use( "/test", (req, res) => {
     
 // })
 
+
+
+// app.get("/ab?c",(req, res) => {
+//     // res.send("Hello from ABC!!");
+//       res.send({FirstName :"Pihu"})
+// })
+
+app.get(/ab?c/, (req, res) => {
+  res.send({ FirstName: "Pihu" });
+});
+
+
+app.get(/b/, (req, res) => {
+  res.send({ FirstName: "Peehu" });
+});
+
+app.get(/.*an$/, (req, res) => {
+  res.send({ FirstName: "rohan" });
+});
+
+app.get("/user", (req, res) =>{
+    console.log(req.query);
+    res.send(req.query);
+})
+
+app.get("/user/:userID/:name/:password", (req, res) =>{
+    console.log(req.params);
+    res.send("Played");
+    
+})
 
 app.listen(3000, () =>{
     console.log("Server is successfully reading");
