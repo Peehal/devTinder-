@@ -138,36 +138,63 @@ const app = express();
 //   res.send("Response 2");
 // })
 
-app.use("/user",[ (req, res, next) => {
-  console.log("handling the route user1 ");
-  next();
-},
-(req, res, next) =>
-{
-  console.log("handling the route user 2");
-  next();
-},
+// app.use("/user",[ (req, res, next) => {
+//   console.log("handling the route user1 ");
+//   next();
+// },
+// (req, res, next) =>
+// {
+//   console.log("handling the route user 2");
+//   next();
+// },
 
-(req, res, next) =>
-{
-  console.log("handling the route user 3");
-  next();
-},
+// (req, res, next) =>
+// {
+//   console.log("handling the route user 3");
+//   next();
+// },
 
-(req, res, next) =>
-{
-  console.log("handling the route user 4");
-  next();
-},
+// (req, res, next) =>
+// {
+//   console.log("handling the route user 4");
+//   next();
+// },
 
-(req, res, next) =>
-{
-  console.log("handling the route user ");
-  res.send("RESPONSE 5 ");
-}]);
+// (req, res, next) =>
+// {
+//   console.log("handling the route user ");
+//   res.send("RESPONSE 5 ");
+// }]);
+
+// app.get("/user", (req, res, next) => {
+//   console.log("handling the route user1 ");
+//   next();
+// });
+
+// app.get("/user",(req, res, next) => {
+//   console.log("handling the route user1 ");
+//   res.send("Second route Handler");
+// });
 
 
+// **************************************************************USES OF MIDDLEWARE *****************************
 
+const {adminAuth, userAuth} = require("./middlewares/auth.js");
+
+app.use("/admin", adminAuth);
+// app.use("/admin", userAuth);
+
+app.get("/user", userAuth, (req, res) =>{
+  res.send("user user ")
+})
+
+app.get("/admin/getallData", (req, res) =>{
+  res.send("User Data Sent");
+})
+
+app.get("/admin/detele", (req, res) =>{
+  res.send("Deleted all the Data");
+});
 
 app.listen(3000, () =>{
     console.log("Server is successfully reading");
