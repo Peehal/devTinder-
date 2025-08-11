@@ -58,29 +58,116 @@ const app = express();
 //       res.send({FirstName :"Pihu"})
 // })
 
-app.get(/ab?c/, (req, res) => {
-  res.send({ FirstName: "Pihu" });
-});
+// app.get(/ab?c/, (req, res) => {
+//   res.send({ FirstName: "Pihu" });
+// });
 
 
-app.get(/b/, (req, res) => {
-  res.send({ FirstName: "Peehu" });
-});
+// app.get(/b/, (req, res) => {
+//   res.send({ FirstName: "Peehu" });
+// });
 
-app.get(/.*an$/, (req, res) => {
-  res.send({ FirstName: "rohan" });
-});
+// app.get(/.*an$/, (req, res) => {
+//   res.send({ FirstName: "rohan" });
+// });
 
-app.get("/user", (req, res) =>{
-    console.log(req.query);
-    res.send(req.query);
-})
+// app.get("/user", (req, res) =>{
+//     console.log(req.query);
+//     res.send(req.query);
+// })
 
-app.get("/user/:userID/:name/:password", (req, res) =>{
-    console.log(req.params);
-    res.send("Played");
+// app.get("/user/:userID/:name/:password", (req, res) =>{
+//     console.log(req.params);
+//     res.send("Played");
     
-})
+// })
+
+
+// ************************************************** MIDDLEWARE AND ERROR HANDLING ************************************
+
+
+// app.use("/user", (req,res) => {
+//   console.log("Route Handler");
+//   res.send("Response has been send");
+// });
+
+// Multiple route Handler 
+
+// app.use("/user", (req, res) => {
+//   console.log("handling the route user1 ");
+//   res.send("Response 1");
+// },
+// (req, res) =>
+// {
+//   console.log("handling the route user 2");
+//   res.send("Response 2");
+// })
+
+
+// app.use("/user", (req, res, next) => {
+//   console.log("handling the route user1 ");
+//   next();
+// },
+// (req, res) =>
+// {
+//   console.log("handling the route user 2");
+//   res.send("Response 2");
+// })
+
+
+// app.use("/user", (req, res, next) => {
+//   console.log("handling the route user1 ");
+//   res.send("Response 1");
+//   next();
+// },
+// (req, res) =>
+// {
+//   console.log("handling the route user 2");
+//   res.send("Response 2");
+// })
+
+
+// app.use("/user", (req, res, next) => {
+//   console.log("handling the route user1 ");
+//   next();
+//   res.send("Response 1");
+// },
+// (req, res) =>
+// {
+//   console.log("handling the route user 2");
+//   res.send("Response 2");
+// })
+
+app.use("/user",[ (req, res, next) => {
+  console.log("handling the route user1 ");
+  next();
+},
+(req, res, next) =>
+{
+  console.log("handling the route user 2");
+  next();
+},
+
+(req, res, next) =>
+{
+  console.log("handling the route user 3");
+  next();
+},
+
+(req, res, next) =>
+{
+  console.log("handling the route user 4");
+  next();
+},
+
+(req, res, next) =>
+{
+  console.log("handling the route user ");
+  res.send("RESPONSE 5 ");
+}]);
+
+
+
 
 app.listen(3000, () =>{
     console.log("Server is successfully reading");
