@@ -1,6 +1,6 @@
-const express = require("express");
+// const express = require("express");
 
-const app = express();
+// const app = express();
 
 // app.use("/hello/2", (req, res) => {
 //     res.send("Hello from 2 !!");
@@ -208,32 +208,68 @@ const app = express();
 //   res.send("user user ")
 // });
 
-app.use("/", (err, req, res , next ) =>{
-  if(err){
-    res.status(500).send("Something went wrong");
-  }
-});
+// app.use("/", (err, req, res , next ) =>{
+//   if(err){
+//     res.status(500).send("Something went wrong");
+//   }
+// });
 
-app.get("/getTheUser", (req, res) =>{
-  // logic of DB call and get user data 
- try {
-  throw new Error("this is the error");
-  res.send("user user ")
- } catch (error) {
-   res.status(500).send("Something went wrong in catch ");
- }
+// app.get("/getTheUser", (req, res) =>{
+//   // logic of DB call and get user data 
+//  try {
+//   throw new Error("this is the error");
+//   res.send("user user ")
+//  } catch (error) {
+//    res.status(500).send("Something went wrong in catch ");
+//  }
   
-});
+// });
 
-app.use("/", (err, req, res , next ) =>{
-  if(err){
-    res.status(500).send("Something went wrong");
-  }
-});
+// app.use("/", (err, req, res , next ) =>{
+//   if(err){
+//     res.status(500).send("Something went wrong");
+//   }
+// });
 
-app.listen(3000, () =>{
+// app.listen(3000, () =>{
+//     console.log("Server is successfully reading");
+// });
+
+// *************************************************************** Databases *************************************************************
+
+const express = require("express");
+
+const connectDB =require ("./config/Database")
+
+const User = require("./Models/user")
+
+const app = express();
+
+app.post("/signup", async (req, res) => {
+    const user = new User ({
+        firstName: "Rohan",
+        lastName:"Peehu",
+        emailID:"Rohan@peehu.com",
+        password:"Peehal@123"
+    })
+
+    try {
+        await user.save();
+    res.send("Data successfully Added ")
+    } catch (error) {
+        res.status(400).send("error saving the user "+err.message )
+    }
+    
+})
+
+connectDB()
+.then(() => {
+    console.log("database is connected");
+    app.listen(3000, () =>{
     console.log("Server is successfully reading");
 });
-
-
+})
+.catch((err) => {
+    console.log("Database is not connected");
+})
 
