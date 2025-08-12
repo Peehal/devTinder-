@@ -179,28 +179,61 @@ const app = express();
 
 // **************************************************************USES OF MIDDLEWARE *****************************
 
-const {adminAuth, userAuth} = require("./middlewares/auth.js");
+// const {adminAuth, userAuth} = require("./middlewares/auth.js");
 
-app.use("/admin", adminAuth);
-// app.use("/admin", userAuth);
+// app.use("/admin", adminAuth);
+// // app.use("/admin", userAuth);
 
-app.get("/user", userAuth, (req, res) =>{
+// app.get("/user", userAuth, (req, res) =>{
+//   res.send("user user ")
+// })
+
+// app.get("/admin/getallData", (req, res) =>{
+//   res.send("User Data Sent");
+// })
+
+// app.get("/admin/detele", (req, res) =>{
+//   res.send("Deleted all the Data");
+// });
+
+
+
+// *********************** ERROR HANDLING ********************************************************
+
+
+// app.get("/getTheUser", (req, res) =>{
+//   // logic of DB call and get user data 
+
+//   throw new Error("this is the error");
+//   res.send("user user ")
+// });
+
+app.use("/", (err, req, res , next ) =>{
+  if(err){
+    res.status(500).send("Something went wrong");
+  }
+});
+
+app.get("/getTheUser", (req, res) =>{
+  // logic of DB call and get user data 
+ try {
+  throw new Error("this is the error");
   res.send("user user ")
-})
+ } catch (error) {
+   res.status(500).send("Something went wrong in catch ");
+ }
+  
+});
 
-app.get("/admin/getallData", (req, res) =>{
-  res.send("User Data Sent");
-})
-
-app.get("/admin/detele", (req, res) =>{
-  res.send("Deleted all the Data");
+app.use("/", (err, req, res , next ) =>{
+  if(err){
+    res.status(500).send("Something went wrong");
+  }
 });
 
 app.listen(3000, () =>{
     console.log("Server is successfully reading");
-    
 });
-
 
 
 
