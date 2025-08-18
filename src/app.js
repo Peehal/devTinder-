@@ -247,6 +247,61 @@ const app = express();
 
 app.use(express.json());
 
+// data of one user through email
+
+// app.get("/user", async (req, res) => {
+//     const userEmail = await req.body.emailID;
+
+//     try{
+//         const users = await User.find({emailID : userEmail});
+//         if (users.length === 0) {
+//             res.status(404).send("User not found")
+//         } else {
+//              res.send(users)
+//         }
+       
+//     }
+//     catch(err){
+//         res.status(400).send("Something went wrong ")
+//     }
+// })
+
+// 1 user only through Email 
+app.get("/user", async (req, res) => {
+    const userEmail = await req.body.emailID;
+
+    try{
+        const users = await User.findOne({emailID : userEmail});
+        if (users.length === 0) {
+            res.status(404).send("User not found")
+        } else {
+             res.send(users)
+        }
+       
+    }
+    catch(err){
+        res.status(400).send("Something went wrong ")
+    }
+})
+
+
+// Feed API - GET /feed - get all the users from the Database
+
+app.get("/feed", async(req, res) =>{
+    try{
+        const users = await User.find({ });
+        if (users.length === 0) {
+            res.status(404).send("User not found")
+        } else {
+             res.send(users)
+        }
+    }
+    catch(err){
+        res.status(400).send("Something went wrong ")
+    }
+})
+
+
 app.post("/signup", async (req, res) => {
 
     // console.log(req);
