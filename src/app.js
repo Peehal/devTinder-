@@ -250,7 +250,7 @@ app.use(express.json());
 // data of one user through email
 
 // app.get("/user", async (req, res) => {
-//     const userEmail = await req.body.emailID;
+//     const userEmail =  req.body.emailID;
 
 //     try{
 //         const users = await User.find({emailID : userEmail});
@@ -268,7 +268,7 @@ app.use(express.json());
 
 // 1 user only through Email 
 app.get("/user", async (req, res) => {
-    const userEmail = await req.body.emailID;
+    const userEmail =  req.body.emailID;
 
     try{
         const users = await User.findOne({emailID : userEmail});
@@ -297,6 +297,49 @@ app.get("/feed", async(req, res) =>{
         }
     }
     catch(err){
+        res.status(400).send("Something went wrong ")
+    }
+})
+
+// Delete user API 
+
+app.delete ("/user", async(req, res) =>{
+    const userId = req.body.userId;
+    try {
+        const user = await User.findByIdAndDelete(userId);
+        res.send("Successfully Deleted the user")
+    } catch (error) {
+        res.status(400).send("Something went wrong ")
+    }
+})
+
+// Update the user 
+
+app.patch("/user", async (req, res) =>{
+    const userId = req.body.userId;
+    const data = req.body;
+    console.log(data)
+
+    try {
+        await User.findByIdAndUpdate({_id: userId}, data);
+        await User.findByIdAndUpdate( userId, data);
+        res.send("Successfully updated the data")
+    } catch (error) {
+        res.status(400).send("Something went wrong ")
+    }
+})
+
+
+// Update the user with emailID
+
+app.patch("/user", async(req, res) =>{
+    const emailID = req.body.emailID;
+    const data = req.body;
+    console.log(data)
+    try {
+        await User.findOneAndUpdate({emailID: emailID}, data);
+        res.send("Successfully updated the data")
+    } catch (error) {
         res.status(400).send("Something went wrong ")
     }
 })
