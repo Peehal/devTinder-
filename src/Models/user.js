@@ -8,7 +8,9 @@ const userSchema = new mongoose.Schema({
         maxLength:30,
     },
     lastName : {
-        type : String
+        type : String,
+        minLength:4,
+        maxLength:10,
     },
     emailID : {
         type : String, 
@@ -69,7 +71,15 @@ const userSchema = new mongoose.Schema({
         default:"this is the default about of User "
     }, 
     skills:{
-        type:[String]
+        type:[String],
+        // validate(value){
+        //     if (value.length > 5 ){
+        //         throw new Error("limit yout skills")
+        //     }
+        //     if (value.length < 1){
+        //         throw new Error("Add at least 1 skill");
+        //     } 
+        // }
     },
     joinedAt:{
     type: Date,

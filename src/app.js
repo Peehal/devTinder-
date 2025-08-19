@@ -315,15 +315,28 @@ app.delete ("/user", async(req, res) =>{
 
 // Update the user 
 
-app.patch("/user", async (req, res) =>{
-    const userId = req.body.userId;
+app.patch("/user/:userId", async (req, res) =>{
+    const userId = req.params?.userId;
     const data = req.body;
 
     try {
+
+        const ALLOWED_UPDATE = ["gender", "age", "photoUrl", "about", "skills"];
+
+        const UpdateAllowed = Object.keys(data).every((k) => ALLOWED_UPDATE.includes(k));
+
+        if (!UpdateAllowed){
+            throw new Error ("Update not allowed")
+        }
+        if(data?.skills.length > 10){
+            throw new Error("Skills connot be more than 10 ")
+        }
+
         const user = await User.findByIdAndUpdate(userId, data, {
             runValidators: true,
         });
         res.send("Successfully updated the data")
+
     } catch (error) {
         res.status(400).send(" UPDATE FAILED : " + error.message)
     }
@@ -347,19 +360,25 @@ app.patch("/user", async (req, res) =>{
 
 app.post("/signup", async (req, res) => {
 
-    // console.log(req);
-    // console.log(req.body);
-
-
     const user = new User (req.body);
 
     try {
+
+        const data = req.body;
+        if (data.firstName) {
+            data.firstName = data.firstName.charAt(0).toUpperCase() + data.firstName.slice(1);
+        }
+        
+        if (data.lastName) {
+            data.lastName = data.lastName.charAt(0).toUpperCase() + data.lastName.slice(1);
+        }
+
         await user.save();
-    res.send("Data successfully Added ")
+        res.send("Data successfully Added ")
     } catch (error) {
         res.status(400).send("error saving the user "+ error.message )
     }
-    
+
 })
 
 connectDB()
