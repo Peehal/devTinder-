@@ -362,6 +362,29 @@ app.patch("/user/:userId", async (req, res) =>{
 // })
 
 
+app.post("/login", async (req, res) =>{
+
+   try {
+     const {emailID, password} = req.body;
+
+    const user = await User.findOne({ emailID : emailID});
+
+    if (!user){
+        throw new Error("Invalid credentials")
+    }
+
+    const passowrdValid = await bcrypt.compare(password, user.password);
+
+    if (passowrdValid){
+        res.send("Login successfully!!")
+    }else{
+        throw new Error("Invalid credentials")
+    }
+   } catch (error) {
+    res.status(400).send("Error : "+ error.message )
+   }
+})
+
 app.post("/signup", async (req, res) => {
 
     try {
@@ -381,8 +404,6 @@ app.post("/signup", async (req, res) => {
         }
 
         // ENCRYPT THE Password
-
-        const {firstName, lastName, emailID, password} = req.body;
 
         const passwordHash = await bcrypt.hash(password, 10);
         console.log(passwordHash);
