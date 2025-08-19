@@ -318,31 +318,31 @@ app.delete ("/user", async(req, res) =>{
 app.patch("/user", async (req, res) =>{
     const userId = req.body.userId;
     const data = req.body;
-    console.log(data)
 
     try {
-        await User.findByIdAndUpdate({_id: userId}, data);
-        await User.findByIdAndUpdate( userId, data);
+        const user = await User.findByIdAndUpdate(userId, data, {
+            runValidators: true,
+        });
         res.send("Successfully updated the data")
     } catch (error) {
-        res.status(400).send("Something went wrong ")
+        res.status(400).send(" UPDATE FAILED : " + error.message)
     }
 })
 
 
 // Update the user with emailID
 
-app.patch("/user", async(req, res) =>{
-    const emailID = req.body.emailID;
-    const data = req.body;
-    console.log(data)
-    try {
-        await User.findOneAndUpdate({emailID: emailID}, data);
-        res.send("Successfully updated the data")
-    } catch (error) {
-        res.status(400).send("Something went wrong ")
-    }
-})
+// app.patch("/user", async(req, res) =>{
+//     const emailID = req.body.emailID;
+//     const data = req.body;
+//     console.log(data)
+//     try {
+//         await User.findOneAndUpdate({emailID: emailID}, data);
+//         res.send("Successfully updated the data")
+//     } catch (error) {
+//         res.status(400).send("Something went wrong ")
+//     }
+// })
 
 
 app.post("/signup", async (req, res) => {
