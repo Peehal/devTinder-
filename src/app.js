@@ -245,6 +245,10 @@ const User = require("./Models/user")
 
 const app = express();
 
+const {validateSignUpData } = require ("./utils/validation");
+
+const bcrypt = require("bcrypt");
+
 app.use(express.json());
 
 // data of one user through email
@@ -360,18 +364,38 @@ app.patch("/user/:userId", async (req, res) =>{
 
 app.post("/signup", async (req, res) => {
 
-    const user = new User (req.body);
-
     try {
+
+        // validate the users
+
+        validateSignUpData(req);
+
 
         const data = req.body;
         if (data.firstName) {
             data.firstName = data.firstName.charAt(0).toUpperCase() + data.firstName.slice(1);
         }
-        
+
         if (data.lastName) {
             data.lastName = data.lastName.charAt(0).toUpperCase() + data.lastName.slice(1);
         }
+
+        // ENCRYPT THE Password
+
+        const {firstName, lastName, emailID, password} = req.body;
+
+        const passwordHash = await bcrypt.hash(password, 10);
+        console.log(passwordHash);
+
+
+        // Creating a new instandce of the User Model 
+        const user = new User ({
+            firstName,
+            lastName,
+            emailID,
+            password:passwordHash
+
+        });
 
         await user.save();
         res.send("Data successfully Added ")

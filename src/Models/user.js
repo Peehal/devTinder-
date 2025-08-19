@@ -77,11 +77,11 @@ const userSchema = new mongoose.Schema({
     photoUrl :{
         type: String, 
         default:"",
-        validate(value){
-            if(!validator.isURL(value)){
-                throw new Error("in valid url" + value);
-            }
-        }
+        // validate(value){
+        //     if(!validator.isURL(value)){
+        //         throw new Error("in valid url" + value);
+        //     }
+        // }
 
     },
     about :{
