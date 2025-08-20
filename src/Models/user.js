@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
-const validator = require('validator');
+const validator = require("validator");
+const jwt = require("jsonwebtoken");
+const bcrypt = require ("bcrypt");
 
 const userSchema = new mongoose.Schema({
     firstName : {
@@ -28,29 +30,6 @@ const userSchema = new mongoose.Schema({
     password : {
         type : String, 
         required: true, 
-//         validate(value) {
-//             let errors = [];
-
-//     if (!/[A-Z]/.test(value)) {
-//       errors.push("Password must contain at least one uppercase letter");
-//     }
-
-//     if (!/[0-9]/.test(value)) {
-//       errors.push("Password must contain at least one number");
-//     }
-
-//     if (!/[@$!%*?&]/.test(value)) {
-//       errors.push("Password must contain at least one special character (@, $, !, %, *, ?, &)");
-//     }
-
-//     if (value.length < 8) {
-//       errors.push("Password must be at least 8 characters long");
-//     }
-
-//     if (errors.length > 0) {
-//       throw new Error(errors.join(" | "));
-//     }
-//   }
         validate(value){
             if(!validator.isStrongPassword(value)){
                 throw new Error("Your password is not a strong password " + value);
@@ -71,8 +50,6 @@ const userSchema = new mongoose.Schema({
             }
         }
 
-        // or for the validation 
-        // enum: ["male", "female", "others"],
     },
     photoUrl :{
         type: String, 
@@ -99,13 +76,27 @@ const userSchema = new mongoose.Schema({
         //     } 
         // }
     },
-    joinedAt:{
-    type: Date,
-    default: Date.now
-  }
 
 }, {
     timestamps : true
 });
+
+userSchema.methods.getJWT = async function (passwordInputByUser){
+    const user = this;
+
+    const token = await jwt.sign({_id: user._id}, "DEV@Tinder$7900")
+
+    return token;
+};
+
+userSchema.methods.validatePassword = async function (passwordInputByUser){
+    const user = this;
+    const passwordHash = user.password;
+
+    const passowrdValid = await bcrypt.compare(passwordInputByUser, passwordHash);
+
+    return passowrdValid;
+}
+
 
 module.exports =  mongoose.model("User",userSchema);;
