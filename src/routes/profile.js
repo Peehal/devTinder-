@@ -1,8 +1,9 @@
 const express = require("express");
 const profileRouter = express.Router();
-const {validateEditProfileData} = require("../utils/validation")
+const {validateEditProfileData,validateEditPassword  } = require("../utils/validation")
 
 const {userAuth} = require("../middlewares/auth")
+const bcrypt = require("bcrypt");
 
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
@@ -33,5 +34,28 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
   
 })
 
+profileRouter.patch("/profile/password", userAuth, async (req, res) => {
+  try {
+    if (!validateEditPassword(req)) {
+      throw new Error("Invalid fields in request body");
+    }
+
+    const user = req.user;
+
+    const isValid = await user.validatePassword(req.body.currentPassword);
+    if (!isValid) {
+      throw new Error("Current password is incorrect");
+    }
+
+    user.password = req.body.newPassword;
+    user.password = await bcrypt.hash(user.password, 10);
+
+    await user.save();
+
+    res.send(`${user.firstName}, your password has been updated successfully`);
+  } catch (err) {
+    res.status(400).send({ error: err.message });
+  }
+});
 
 module.exports = profileRouter;
