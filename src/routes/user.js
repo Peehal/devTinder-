@@ -88,7 +88,7 @@ userRouter.get("/feed", userAuth, async (req, res) =>{
                 {_id : {$nin: Array.from(hideUserFromFeed)}},
                 {_id :{ $ne : loggedInUser._id}}
             ]
-        }).select("firstName lastName")
+        }).select("-password -email -__v")
           .skip(skip)
           .limit(limit)
 
