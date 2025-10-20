@@ -5,6 +5,8 @@ const {userAuth} = require("../middlewares/auth");
 const ConnectionRequest = require("../Models/connectionRequest");
 const User = require("../Models/user")
 
+const sendEmail = require("../utils/sendEmail")
+
 requestRouter.post("/request/send/:status/:userId", userAuth, async (req, res) =>{
   try {
     const fromUserId = req.user._id;
@@ -40,8 +42,16 @@ if (existingConnectionRequest) {
   });
 
   const data = await connectionRequest.save();
+
+
+  const emailRes = await sendEmail.run(" You got a newFriendRequest from "+ req.user.firstName,
+    req.user.firstName + "is" + status +"in" + toUser.firstName
+  );
+
+  console.log(emailRes);
+
   res.json({
-    message:` connection Rewuest sent successfully `,data,
+    message:` connection Request sent successfully `,data,
   })
 
   } catch (error) {
