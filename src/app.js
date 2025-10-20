@@ -3,12 +3,23 @@ const connectDB = require("./config/Database");
 const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+require('dotenv').config();
+
+
+// app.use(
+//   cors({
+//     origin:"*",
+//     credentials: true,
+//   }));
 
 app.use(
   cors({
-    origin:"*",
-    credentials: true,
-  }));
+    origin: "http://localhost:5173",
+    credentials: true,               
+  })
+);
+
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -26,7 +37,7 @@ app.use("/", userRouter);
 connectDB()
   .then(() => {
     console.log("database is connected");
-    app.listen(3000, () => {
+    app.listen(process.env.Port, () => {
       console.log("Server is successfully reading");
     });
   })
